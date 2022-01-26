@@ -1,0 +1,56 @@
+/* Utilities */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: darkblue;
+}
+
+.container {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+
+
+/* Grid */
+
+#grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 500px;
+    height: 500px;
+    margin: 50px auto;
+    border: 2px dashed white;
+}
+
+.cell {
+    height: calc(100% / 8);
+    width: calc(100% / 8);
+    border: 2px solid white;
+    cursor: pointer;
+    color: white;
+}
+
+.clicked {
+    background-color: lightblue;
+}
+.cell.safe {
+    cursor: not-allowed;
+    background-color: green;
+    color: white;
+}
+
+.cell.bomb {
+    cursor: not-allowed;
+    background-color: red;
+    color: white;
+}
