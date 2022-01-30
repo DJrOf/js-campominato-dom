@@ -5,8 +5,16 @@ in un range:
 con difficoltà 1 => tra 1 e 100
 con difficoltà 2 => tra 1 e 81
 con difficoltà 3 => tra 1 e 49
-Quando l'utente clicca su ogni cella, 
-la cella cliccata si colora di azzurro. */ 
+
+Il computer deve generare 16 numeri casuali nello stesso range della difficoltà prescelta: le bombe.
+I numeri nella lista delle bombe non possono essere duplicati.
+In seguito l'utente clicca su una cella: se il numero è presente nella lista dei numeri generati - abbiamo calpestato una bomba - 
+la cella si colora di rosso e la partita termina, altrimenti la cella cliccata si colora di azzurro e l'utente può continuare a 
+cliccare sulle altre celle.
+La partita termina quando il giocatore clicca su una bomba o raggiunge il numero massimo possibile di numeri consentiti.
+Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha cliccato su una cella x
+che non era una b.
+*/ 
 
 // BombsNo gen
 
@@ -75,29 +83,39 @@ const generateCell = (number, cellsPerRow) => {
 
 const gameOver = (bombs, points, hasLost) => {
 
-    showBombs(bombs);
     const messageElement = document.createElement('h3');
     messageElement.className = 'message';
-    const messageText = hasLost ? `Pai perso! Punti: ${points}`:
-    `Hai vinto! Punti: ${points}`
+    const messageText = hasLost ? `Hai perso! Punti: ${points}`: 'Hai vinto! Rigioca';
+    messageElement.innerText = messageText;
+    grid.appendChild(messageElement);
+    showBombs(bombs);
 };
 
+// Event Listner reset
+
+const disableCell = (cell) => {
+    const clone = cell.cloneNode();
+    clone.innerText = cell.innerText;
+    clone.classList.add('.disabled'); 
+    cell.parentNode.replaceChild(clone, cell)
+    return clone;
+};
 
 //Click - Evento
 
 const onCellClick = (clickedCell, bombs, number) => {
-    clickedCell.removeEventListener('click', onCellClick);
-
-    number = clickedCell.innerText;
-
+    
+    const disabledCell = disableCell(clickedCell);
+    
     if (bombs.includes(number)) {
         gameOver(bombs, attempts, true);
     } else {
-        clickedCell.classList.add('safe');
+        disabledCell.classList.add('safe');
         attempts++;
 
-        if (attempts === MAX_ATTEMPTS)
-        gameOver(bombs, attempts, false)
+        if (attempts === MAX_ATTEMPTS) {
+            gameOver(bombs, attempts, false);
+        }
     }
 };
 
@@ -106,9 +124,10 @@ const showBombs = (bombs) => {
     const cells = document.querySelectorAll('.cell');
     for (let i = 0; i < cells.length; i++) {
     const cell = cells[i];
-    const cellNumber = parseInt(cell.innerText);
-    cell.removeEventListener ('click', oneCellClick);
-    if (bombs.includes(cellNumber)) cell.classical.add('bomb');
+    const disabledCell = disableCell(cell)
+    const cellNumber = parseInt(disabledCell.innerText);
+   // cell.removeEventListener ('click', onCellClick);
+    if (bombs.includes(cellNumber)) disabledCell.classList.add('bomb');
     }
 };  
 
@@ -117,7 +136,7 @@ const generateGrid = (cellsNumber, cellsPerRow, bombs) => {
     for (let i = 1; i <= cellsNumber; i++) {
         const cell = generateCell(i, cellsPerRow);
 
-        cell.addEventListener('click', (e) => onCellClick(e.target, bombs, i))
+        cell.addEventListener('click', (e) => onCellClick(e.target, bombs, i));
         grid.appendChild(cell);
     }
 };

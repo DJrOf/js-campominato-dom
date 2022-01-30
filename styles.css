@@ -33,24 +33,28 @@ body {
 }
 
 .cell {
-    height: calc(100% / 8);
-    width: calc(100% / 8);
     border: 2px solid white;
     cursor: pointer;
-    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.clicked {
-    background-color: lightblue;
+.message {
+    color: red;
+    font-size: 32px;
+    text-align: center;
 }
 .cell.safe {
-    cursor: not-allowed;
     background-color: green;
     color: white;
 }
 
 .cell.bomb {
-    cursor: not-allowed;
     background-color: red;
     color: white;
+}
+
+.cell.disabled {
+    cursor: not-allowed;
 }
